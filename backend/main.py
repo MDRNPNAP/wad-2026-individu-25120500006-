@@ -85,3 +85,6 @@ def get_menu_by_id(id: str):
             status_code=status.HTTP_404_NOT_FOUND, detail="Menu tidak ditemukan"
         )
     return db_menu[id]
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
