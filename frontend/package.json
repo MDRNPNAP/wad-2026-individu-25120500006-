@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "dev": "echo 'Running dev server'",
     "build": "echo 'No build step required'",
     "test": "echo 'No tests specified' && exit 0"
   }
