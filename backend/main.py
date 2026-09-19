@@ -3,6 +3,9 @@ from typing import List, Optional
 from uuid import uuid4
 from fastapi import FastAPI, HTTPException, Query, Response, status
 from pydantic import BaseModel, Field, field_validator
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
 
 app = FastAPI(title="WAD 2026 Individu API")
 
