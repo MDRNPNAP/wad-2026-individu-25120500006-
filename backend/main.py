@@ -2,10 +2,7 @@ import re
 from typing import List, Optional
 from uuid import uuid4
 from fastapi import FastAPI, HTTPException, Query, Response, status
-from pydantic import BaseModel, Field, field_validator
-@app.get("/health")
-def health_check():
-    return {"status": "ok"}
+import pydantic
 
 app = FastAPI(title="WAD 2026 Individu API")
 
@@ -15,20 +12,20 @@ db_menu = {}
 
 # --- SCHEMAS ---
 # Skema Input (tanpa id)
-class MenuCreate(BaseModel):
+class MenuCreate(pydantic.BaseModel):
     nama: str
-    sku: str = Field(..., description="Format: KOPI-000")
-    kategori: str = Field(..., description="Pilihan: kopi / non-kopi / makanan")
-    harga: float = Field(..., gt=0)
+    sku: str = pydantic.Field(..., description="Format: KOPI-000")
+    kategori: str = pydantic.Field(..., description="Pilihan: kopi / non-kopi / makanan")
+    harga: float = pydantic.Field(..., gt=0)
 
-    @field_validator("sku")
+    @pydantic.field_validator("sku")
     def validate_sku(cls, v):
         pattern = r"^KOPI-\d{3}$"
         if not re.match(pattern, v):
             raise ValueError("SKU harus berformat KOPI-000 (contoh: KOPI-001)")
         return v
 
-    @field_validator("kategori")
+    @pydantic.field_validator("kategori")
     def validate_kategori(cls, v):
         allowed = ["kopi", "non-kopi", "makanan"]
         if v.lower() not in allowed:
@@ -88,6 +85,8 @@ def get_menu_by_id(id: str):
             status_code=status.HTTP_404_NOT_FOUND, detail="Menu tidak ditemukan"
         )
     return db_menu[id]
+
+
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
